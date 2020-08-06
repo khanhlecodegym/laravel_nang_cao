@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
-use App\Repositories\CustomerRepository;
-use Illuminate\Http\Request;
+use App\Repositories\CustomerRepositoryInterface;
 
 class CustomerController extends Controller
 {
     private $customerRepository;
 
-    public function __construct(CustomerRepository $customerRepository)
+    public function __construct(CustomerRepositoryInterface $customerRepository)
     {
         $this->customerRepository = $customerRepository;
     }
@@ -48,6 +46,9 @@ class CustomerController extends Controller
     {
         $customer = $this->customerRepository->findById($id);
 
+        if (!$customer) {
+            return response()->json([], 404);
+        }
         return response()->json($customer, 200);
     }
 

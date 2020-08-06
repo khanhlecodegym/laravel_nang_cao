@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Customer;
 
-class CustomerRepository
+class CustomerRepository implements CustomerRepositoryInterface
 {
     public function all()
     {
@@ -16,10 +16,12 @@ class CustomerRepository
 
     public function findById($customerId)
     {
-        return Customer::where('id', $customerId)
+        $customer =  Customer::where('id', $customerId)
             ->where('active', 1)
             ->with('user')
             ->firstOrFail();
+
+        return $customer;
     }
 
     public function findByCustomerName($cutomerName)
@@ -48,16 +50,16 @@ class CustomerRepository
 
         $customer->update(request()->only(['name', 'active']));
 
-        return $customer;
+        return $customer->format();
     }
 
-    protected function format($customer)
-    {
-        return [
-            'customer_id' => $customer->id,
-            'name' => $customer->name,
-            'created_by' => $customer->user->email,
-            'last_updated' => $customer->updated_at->diffForHumans(),
-        ];
-    }
+    // protected function format($customer)
+    // {
+    //     return [
+    //         'customer_id' => $customer->id,
+    //         'name' => $customer->name,
+    //         'created_by' => $customer->user->email,
+    //         'last_updated' => $customer->updated_at->diffForHumans(),
+    //     ];
+    // }
 }
