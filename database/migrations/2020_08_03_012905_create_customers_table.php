@@ -19,7 +19,10 @@ class CreateCustomersTable extends Migration
             $table->string('name');
             $table->timestamp('contacted_at')->nullable();
             $table->unsignedSmallInteger('active')->index();
+
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
+
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
